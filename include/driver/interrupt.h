@@ -1,5 +1,5 @@
-#ifndef __NRF51822_PORT_H__
-#define __NRF51822_PORT_H__
+#ifndef __DRIVER_INTERRUPT_H__
+#define __DRIVER_INTERRUPT_H__
 
 void nrf51822_int_disable(void);
 void nrf51822_int_enable(void);

@@ -1,5 +1,5 @@
-#ifndef  __NODE_LOG_H__
-#define  __NODE_LOG_H__
+#ifndef  ____DRIVER_LOG_H__
+#define  ____DRIVER_LOG_H__
 
 #include <stdio.h>
 

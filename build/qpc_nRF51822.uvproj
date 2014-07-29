@@ -422,7 +422,7 @@
             <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\..\main.c</FilePath>
+              <FilePath>..\src\main.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1154,7 +1154,7 @@
             <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\..\main.c</FilePath>
+              <FilePath>..\src\main.c</FilePath>
             </File>
           </Files>
         </Group>
