@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model version="3.1.3">
+ <framework name="qpc"/>
+ <package name="Base" stereotype="0x02">
+  <class name="qm_stack" superclass="qpc::QMActive">
+   <documentation>slave manages the whole system
+</documentation>
+   <statechart>
+    <initial target="../1">
+     <action>LOG(&quot;Stack initial&quot;);
+
+QActive_subscribe((QActive *)me, STACK_SWI2_SIG);
+QActive_subscribe((QActive *)me, STACK_SYS_EVENT_SIG);
+QActive_subscribe((QActive *)me, STACK_BLE_EVENT_SIG);</action>
+     <initial_glyph conn="12,7,5,0,17,5">
+      <action box="-1,-2,10,2"/>
+     </initial_glyph>
+    </initial>
+    <state name="active">
+     <tran trig="STACK_SYS_EVENT">
+      <action>LOG(&quot;sys event&quot;);</action>
+      <tran_glyph conn="13,36,3,-1,19">
+       <action box="0,-2,15,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="STACK_BLE_EVENT">
+      <action>ble_evt_t * p_ble_evt =(ble_evt_t *) Q_EVT_CAST(stack_ble_evt)-&gt;ble_evt;
+
+
+LOG(&quot;ble evt id: 0x%x&quot;, p_ble_evt-&gt;header.evt_id);
+
+switch (p_ble_evt-&gt;header.evt_id)
+    {
+        case BLE_GAP_EVT_CONNECTED:
+            LOG(&quot;connected&quot;);
+            break;
+            
+        case BLE_GAP_EVT_DISCONNECTED:
+            LOG(&quot;disconnected&quot;);
+            advertising_start();
+            break;
+            
+        case BLE_GATTS_EVT_WRITE:
+            LOG(&quot;write&quot;);
+            break;
+            
+        case BLE_GAP_EVT_CONN_PARAM_UPDATE:
+            LOG(&quot;param update&quot;);
+            break;
+            
+        default:
+            // No implementation needed.
+           break;
+    }</action>
+      <tran_glyph conn="13,42,3,-1,19">
+       <action box="0,-2,17,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="STACK_SWI2">
+      <action>LOG(&quot;SWI2&quot;);
+
+stack_pull_events();</action>
+      <tran_glyph conn="13,26,3,-1,19">
+       <action box="0,-2,17,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="13,12,45,40"/>
+    </state>
+    <state_diagram size="80,71"/>
+   </statechart>
+  </class>
+  <attribute name="ao_qm_stack" type="QActive * const" visibility="0x00" properties="0x00"/>
+  <operation name="qm_stack_ctor" type="void" visibility="0x00" properties="0x00">
+   <code>qm_stack *me = &amp;l_qm_stack;
+QMActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;qm_stack_initial));
+</code>
+  </operation>
+ </package>
+ <directory name="../">
+  <directory name="include">
+   <directory name="qm">
+    <file name="qm_stack.h">
+     <text>#ifndef __NODE_SLAVE_SM_H__
+#define __NODE_SLAVE_SM_H__
+
+#include &quot;qm/qm_common.h&quot;
+
+$declare(Base::ao_qm_stack)
+
+$declare(Base::qm_stack_ctor)
+
+#endif</text>
+    </file>
+    <file name="qm_signals.h">
+     <text>#ifndef __QM_SIGNALS_H__
+#define __QM_SIGNALS_H__
+
+#include &quot;qp_port.h&quot;
+
+enum qm_signals
+{
+    /*signal start value*/
+    START_SIG= Q_USER_SIG,
+  
+
+    /*softdevice events*/
+    STACK_SWI2_SIG,
+    STACK_SYS_EVENT_SIG,
+    STACK_BLE_EVENT_SIG,
+
+
+
+    /*leds events*/
+    LEDS_IN_TIMEOUT_SIG,
+
+    MAX_SIG,
+};
+
+
+#endif</text>
+    </file>
+    <file name="qm_events.h">
+     <text>#ifndef __QM_EVENTS_H__
+#define __QM_EVENTS_H__
+
+#include &quot;qp_port.h&quot;
+#include &quot;ble_stack_handler_types.h&quot;
+
+typedef struct general_evt_tag {
+    QEvt super; 
+} general_evt;
+
+
+typedef struct stack_ble_evt_tag {
+    QEvt super;
+    uint32_t ble_evt[CEIL_DIV(BLE_STACK_EVT_MSG_BUF_SIZE, sizeof(uint32_t))];
+} stack_ble_evt;
+
+
+
+#endif</text>
+    </file>
+    <file name="qm_common.h">
+     <text>#ifndef __QM_COMMON_H__
+#define __QM_COMMON_H__
+
+#include &quot;qm_events.h&quot;
+#include &quot;qm_signals.h&quot;
+
+#include &quot;driver/log.h&quot;
+
+#endif</text>
+    </file>
+   </directory>
+  </directory>
+  <directory name="src">
+   <directory name="qm">
+    <file name="qm_stack.c">
+     <text>#include &quot;qm/qm_stack.h&quot;
+
+
+$declare(Base::qm_stack)
+
+
+static qm_stack l_qm_stack;
+
+QActive* const ao_qm_stack = (QActive*)&amp;l_qm_stack;
+
+$define(Base::qm_stack_ctor)
+$define(Base::qm_stack)</text>
+    </file>
+   </directory>
+  </directory>
+ </directory>
+</model>
