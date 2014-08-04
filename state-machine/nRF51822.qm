@@ -64,24 +64,293 @@ stack_pull_events();</action>
        <action box="0,-2,17,2"/>
       </tran_glyph>
      </tran>
-     <state_glyph node="13,12,45,40"/>
+     <state_glyph node="13,12,37,38"/>
     </state>
     <state_diagram size="80,71"/>
    </statechart>
   </class>
-  <attribute name="ao_qm_stack" type="QActive * const" visibility="0x00" properties="0x00"/>
+  <class name="qm_connection" superclass="qpc::QMActive">
+   <documentation>Initiating and executing a connection parameters negotiation procedure.</documentation>
+   <statechart>
+    <initial target="../1">
+     <action>LOG(&quot;lbs initial&quot;);
+
+QActive_subscribe((QActive *)me, STACK_SYS_EVENT_SIG);
+QActive_subscribe((QActive *)me, STACK_BLE_EVENT_SIG);</action>
+     <initial_glyph conn="14,4,5,0,17,7">
+      <action box="0,-2,10,2"/>
+     </initial_glyph>
+    </initial>
+    <state name="init">
+     <tran trig="STACK_BLE_EVENT">
+      <action>ble_evt_t * p_ble_evt =(ble_evt_t *) Q_EVT_CAST(stack_ble_evt)-&gt;ble_evt;
+
+
+//LOG(&quot;ble evt id: 0x%x&quot;, p_ble_evt-&gt;header.evt_id);
+
+switch (p_ble_evt-&gt;header.evt_id)
+    {
+        case BLE_GAP_EVT_CONNECTED:
+            {
+            //sd_ble_gap_rssi_start (p_ble_evt-&gt;evt.gap_evt.conn_handle);
+            //sd_ble_gap_tx_power_set(-30);
+            }
+            break;
+            
+        case BLE_GAP_EVT_DISCONNECTED:
+            
+            break;
+            
+        case BLE_GATTS_EVT_WRITE:
+           
+            break;
+            
+        case BLE_GAP_EVT_CONN_PARAM_UPDATE:
+           
+            break;
+        case BLE_GAP_EVT_RSSI_CHANGED:
+            //LOG(&quot;rssi change:%d&quot;, p_ble_evt-&gt;evt.gap_evt.params.rssi_changed.rssi);
+            break;
+            
+        default:
+            // No implementation needed.
+           break;
+    }</action>
+      <tran_glyph conn="11,20,3,-1,17">
+       <action box="0,-2,17,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="BLE_GAP_EVT_CONNECTED">
+      <tran_glyph conn="11,30,3,-1,19">
+       <action box="0,-2,20,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="BLE_GAP_EVT_DISCONNECTED">
+      <tran_glyph conn="11,41,3,-1,19">
+       <action box="0,-2,22,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="BLE_GAP_EVT_CONN_PARAM_UPDATE">
+      <tran_glyph conn="11,52,3,-1,19">
+       <action box="0,-2,26,2"/>
+      </tran_glyph>
+     </tran>
+     <tran trig="BLE_GATTS_EVT_WRITE">
+      <tran_glyph conn="11,63,3,-1,19">
+       <action box="0,-2,22,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="11,11,61,57"/>
+    </state>
+    <state_diagram size="80,73"/>
+   </statechart>
+  </class>
+  <class name="qm_security" superclass="qpc::QMActive">
+   <statechart>
+    <initial target="../1">
+     <action>QActive_subscribe((QActive *)me, STACK_SYS_EVENT_SIG);
+QActive_subscribe((QActive *)me, STACK_BLE_EVENT_SIG);</action>
+     <initial_glyph conn="30,14,5,0,12,5">
+      <action box="0,-2,10,2"/>
+     </initial_glyph>
+    </initial>
+    <state name="init">
+     <tran trig="STACK_BLE_EVENT">
+      <action>ble_evt_t * p_ble_evt =(ble_evt_t *) Q_EVT_CAST(stack_ble_evt)-&gt;ble_evt;
+
+
+//LOG(&quot;ble evt id: 0x%x&quot;, p_ble_evt-&gt;header.evt_id);
+
+switch (p_ble_evt-&gt;header.evt_id)
+    {
+        case BLE_GAP_EVT_CONNECTED:
+           
+            break;
+            
+        case BLE_GAP_EVT_DISCONNECTED:
+            
+            break;
+            
+        case BLE_GAP_EVT_SEC_PARAMS_REQUEST:
+        {
+        ble_gap_sec_params_t m_sec_params;
+
+        sec_params_init(&amp;m_sec_params);
+
+        sd_ble_gap_sec_params_reply(p_ble_evt-&gt;evt.gap_evt.conn_handle, BLE_GAP_SEC_STATUS_SUCCESS, &amp;m_sec_params);
+        }
+        LOG(&quot;security params request&quot;);
+        break;
+
+        case BLE_GATTS_EVT_SYS_ATTR_MISSING:
+        sd_ble_gatts_sys_attr_set(p_ble_evt-&gt;evt.gap_evt.conn_handle, NULL, 0);
+            
+            
+        default:
+            // No implementation needed.
+           break;
+    }</action>
+      <tran_glyph conn="25,39,3,-1,17">
+       <action box="0,-2,17,2"/>
+      </tran_glyph>
+     </tran>
+     <state_glyph node="25,19,29,28"/>
+    </state>
+    <state_diagram size="80,50"/>
+   </statechart>
+  </class>
+  <attribute name="ao_qm_stack" type="QMActive * const" visibility="0x00" properties="0x00"/>
+  <attribute name="ao_qm_connection" type="QMActive * const" visibility="0x00" properties="0x00"/>
+  <attribute name="ao_qm_security" type="QMActive * const" visibility="0x00" properties="0x00"/>
   <operation name="qm_stack_ctor" type="void" visibility="0x00" properties="0x00">
    <code>qm_stack *me = &amp;l_qm_stack;
 QMActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;qm_stack_initial));
 </code>
+  </operation>
+  <operation name="qm_connection_ctor" type="void" visibility="0x00" properties="0x00">
+   <code>qm_connection *me = &amp;l_qm_connection;
+QMActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;qm_connection_initial));
+</code>
+  </operation>
+  <operation name="qm_security_ctor" type="void" visibility="0x00" properties="0x00">
+   <code>qm_security *me = &amp;l_qm_security;
+QMActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;qm_security_initial));
+</code>
+  </operation>
+ </package>
+ <package name="User" stereotype="0x02">
+  <class name="qm_lbs" superclass="qpc::QMActive">
+   <statechart>
+    <initial target="../1">
+     <action>LOG(&quot;lbs initial&quot;);
+
+QActive_subscribe((QActive *)me, STACK_SYS_EVENT_SIG);
+QActive_subscribe((QActive *)me, STACK_BLE_EVENT_SIG);</action>
+     <initial_glyph conn="16,8,5,0,17,7">
+      <action box="0,-2,10,2"/>
+     </initial_glyph>
+    </initial>
+    <state name="init">
+     <state_glyph node="16,15,32,25"/>
+    </state>
+    <state_diagram size="80,50"/>
+   </statechart>
+  </class>
+  <attribute name="ao_qm_lbs" type="QMActive * const" visibility="0x00" properties="0x00"/>
+  <operation name="qm_lbs_ctor" type="void" visibility="0x00" properties="0x00">
+   <code>qm_lbs *me = &amp;l_qm_lbs;
+QMActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;qm_lbs_initial));
+</code>
+  </operation>
+ </package>
+ <package name="Test" stereotype="0x02">
+  <class name="qm_gpio" superclass="qpc::QMActive">
+   <attribute name="timer" type="QTimeEvt" visibility="0x00" properties="0x00"/>
+   <statechart>
+    <initial target="../1">
+     <action>LOG(&quot;gpio initial&quot;);
+
+QActive_subscribe((QActive *)me, LED_TIMEOUT_SIG);
+
+QActive_subscribe((QActive *)me, GPIOTE_TOGGLE_SIG);
+</action>
+     <initial_glyph conn="12,6,5,0,18,6">
+      <action box="0,-2,10,2"/>
+     </initial_glyph>
+    </initial>
+    <state name="init">
+     <entry>QTimeEvt_armX(&amp;me-&gt;timer,  QF_TICKS_PER_SEC, QF_TICKS_PER_SEC);</entry>
+     <state name="test_gpio">
+      <entry>led_init();</entry>
+      <initial target="../3">
+       <initial_glyph conn="19,47,5,0,7,4">
+        <action box="0,-2,10,2"/>
+       </initial_glyph>
+      </initial>
+      <state name="on">
+       <entry>LOG(&quot;gpio on&quot;);
+
+led_on();</entry>
+       <tran trig="LED_TIMEOUT" target="../../2">
+        <tran_glyph conn="18,31,3,3,17">
+         <action box="0,-2,11,2"/>
+        </tran_glyph>
+       </tran>
+       <state_glyph node="18,27,15,14">
+        <entry box="1,2,6,2"/>
+       </state_glyph>
+      </state>
+      <state name="off">
+       <entry>LOG(&quot;gpio off&quot;);
+
+led_off();</entry>
+       <tran trig="LED_TIMEOUT" target="../../1">
+        <tran_glyph conn="49,35,1,3,-31">
+         <action box="0,-2,10,2"/>
+        </tran_glyph>
+       </tran>
+       <state_glyph node="35,27,14,14">
+        <entry box="1,2,6,2"/>
+       </state_glyph>
+      </state>
+      <state name="toggle">
+       <tran trig="LED_TIMEOUT">
+        <action>led_toggle();</action>
+        <tran_glyph conn="14,64,3,-1,13">
+         <action box="0,-2,11,2"/>
+        </tran_glyph>
+       </tran>
+       <state_glyph node="14,51,18,15"/>
+      </state>
+      <state_glyph node="8,21,50,49">
+       <entry box="1,2,6,2"/>
+      </state_glyph>
+     </state>
+     <state name="test_gpiote">
+      <entry>LOG(&quot;gpiote&quot;);
+
+led_init();
+button_init();
+</entry>
+      <tran trig="GPIOTE_TOGGLE">
+       <action>printf(&quot;-&quot;);
+
+led_toggle();</action>
+       <tran_glyph conn="63,36,3,-1,16">
+        <action box="0,-2,12,2"/>
+       </tran_glyph>
+      </tran>
+      <tran trig="LED_TIMEOUT">
+       <action>//LOG(&quot;gpiote timer&quot;);</action>
+       <tran_glyph conn="63,53,3,-1,17">
+        <action box="0,-2,11,2"/>
+       </tran_glyph>
+      </tran>
+      <state_glyph node="63,22,46,35">
+       <entry box="1,2,6,2"/>
+      </state_glyph>
+     </state>
+     <state_glyph node="4,12,114,62">
+      <entry box="1,2,6,2"/>
+     </state_glyph>
+    </state>
+    <state_diagram size="121,84"/>
+   </statechart>
+  </class>
+  <attribute name="ao_qm_gpio" type="QActive * const" visibility="0x00" properties="0x00"/>
+  <operation name="qm_gpio_ctor" type="void" visibility="0x00" properties="0x00">
+   <code>qm_gpio *me = &amp;l_qm_gpio;
+QMActive_ctor(&amp;me-&gt;super, Q_STATE_CAST(&amp;qm_gpio_initial));
+
+QTimeEvt_ctorX (&amp;me-&gt;timer, &amp;me-&gt;super, LED_TIMEOUT_SIG, 0U);</code>
   </operation>
  </package>
  <directory name="../">
   <directory name="include">
    <directory name="qm">
     <file name="qm_stack.h">
-     <text>#ifndef __NODE_SLAVE_SM_H__
-#define __NODE_SLAVE_SM_H__
+     <text>#ifndef __QM_STACK_H__
+#define __QM_STACK_H__
 
 #include &quot;qm/qm_common.h&quot;
 
@@ -108,10 +377,34 @@ enum qm_signals
     STACK_SYS_EVENT_SIG,
     STACK_BLE_EVENT_SIG,
 
+    
+    /*ble events, mapping from SDK*/
+    BLE_GAP_EVT_CONNECTED_SIG,                        /**&lt; Connection established. */
+    BLE_GAP_EVT_DISCONNECTED_SIG,                     /**&lt; Disconnected from peer. */
+    BLE_GAP_EVT_CONN_PARAM_UPDATE_SIG,                /**&lt; Connection Parameters updated. */
+    BLE_GAP_EVT_SEC_PARAMS_REQUEST_SIG,               /**&lt; Request to provide security parameters. */
+    BLE_GAP_EVT_SEC_INFO_REQUEST_SIG,                 /**&lt; Request to provide security information. */
+    BLE_GAP_EVT_PASSKEY_DISPLAY_SIG,                  /**&lt; Request to display a passkey to the user. */
+    BLE_GAP_EVT_AUTH_KEY_REQUEST_SIG,                 /**&lt; Request to provide an authentication key. */
+    BLE_GAP_EVT_AUTH_STATUS_SIG,                      /**&lt; Authentication procedure completed with status. */
+    BLE_GAP_EVT_CONN_SEC_UPDATE_SIG,                  /**&lt; Connection security updated. */
+    BLE_GAP_EVT_TIMEOUT_SIG,                          /**&lt; Timeout expired. */
+    BLE_GAP_EVT_RSSI_CHANGED_SIG,                     /**&lt; Signal strength measurement report. */
+
+    BLE_GATTS_EVT_WRITE_SIG,                          /**&lt; Write operation performed. */
+    BLE_GATTS_EVT_RW_AUTHORIZE_REQUEST_SIG,           /**&lt; Read/Write Authorization request. */
+    BLE_GATTS_EVT_SYS_ATTR_MISSING_SIG,               /**&lt; A persistent system attribute access is pending, awaiting a sd_ble_gatts_sys_attr_set(). */
+    BLE_GATTS_EVT_HVC_SIG,                            /**&lt; Handle Value Confirmation. */
+    BLE_GATTS_EVT_SC_CONFIRM_SIG,                     /**&lt; Service Changed Confirmation. */
+    BLE_GATTS_EVT_TIMEOUT_SIG,                        /**&lt; Timeout. */
+
 
 
     /*leds events*/
-    LEDS_IN_TIMEOUT_SIG,
+    LED_TIMEOUT_SIG,
+    
+    /*gpiote*/
+    GPIOTE_TOGGLE_SIG,
 
     MAX_SIG,
 };
@@ -151,6 +444,54 @@ typedef struct stack_ble_evt_tag {
 
 #endif</text>
     </file>
+    <file name="qm_connection.h">
+     <text>#ifndef __QM_CONNECTION_H__
+#define __QM_CONNECTION_H__
+
+#include &quot;qm/qm_common.h&quot;
+
+$declare(Base::ao_qm_connection)
+
+$declare(Base::qm_connection_ctor)
+
+#endif</text>
+    </file>
+    <file name="qm_security.h">
+     <text>#ifndef __QM_SECURITY_H__
+#define __QM_SECURITY_H__
+
+#include &quot;qm/qm_common.h&quot;
+
+$declare(Base::ao_qm_security)
+
+$declare(Base::qm_security_ctor)
+
+#endif</text>
+    </file>
+    <file name="qm_lbs.h">
+     <text>#ifndef __QM_LBS_H__
+#define __QM_LBS_H__
+
+#include &quot;qm/qm_common.h&quot;
+
+$declare(User::ao_qm_lbs)
+
+$declare(User::qm_lbs_ctor)
+
+#endif</text>
+    </file>
+    <file name="qm_gpio.h">
+     <text>#ifndef __QM_GPIO_H__
+#define __QM_GPIO_H__
+
+#include &quot;qm/qm_common.h&quot;
+
+$declare(Test::ao_qm_gpio)
+
+$declare(Test::qm_gpio_ctor)
+
+#endif</text>
+    </file>
    </directory>
   </directory>
   <directory name="src">
@@ -168,6 +509,63 @@ QActive* const ao_qm_stack = (QActive*)&amp;l_qm_stack;
 
 $define(Base::qm_stack_ctor)
 $define(Base::qm_stack)</text>
+    </file>
+    <file name="qm_connection.c">
+     <text>#include &quot;qm/qm_connection.h&quot;
+
+
+$declare(Base::qm_connection)
+
+
+static qm_connection l_qm_connection;
+
+QActive* const ao_qm_connection = (QActive*)&amp;l_qm_connection;
+
+$define(Base::qm_connection_ctor)
+$define(Base::qm_connection)</text>
+    </file>
+    <file name="qm_security.c">
+     <text>#include &quot;qm/qm_security.h&quot;
+#include &quot;base/security.h&quot;
+
+$declare(Base::qm_security)
+
+
+static qm_security l_qm_security;
+
+QActive* const ao_qm_security = (QActive*)&amp;l_qm_security;
+
+$define(Base::qm_security_ctor)
+$define(Base::qm_security)</text>
+    </file>
+    <file name="qm_lbs.c">
+     <text>#include &quot;qm/qm_lbs.h&quot;
+#include &quot;user/lbs.h&quot;
+
+$declare(User::qm_lbs)
+
+
+static qm_lbs l_qm_lbs;
+
+QActive* const ao_qm_lbs = (QActive*)&amp;l_qm_lbs;
+
+$define(User::qm_lbs_ctor)
+$define(User::qm_lbs)</text>
+    </file>
+    <file name="qm_gpio.c">
+     <text>#include &quot;qm/qm_gpio.h&quot;
+
+#include &quot;test/test_gpio.h&quot;
+
+$declare(Test::qm_gpio)
+
+
+static qm_gpio l_qm_gpio;
+
+QActive* const ao_qm_gpio = (QActive*)&amp;l_qm_gpio;
+
+$define(Test::qm_gpio_ctor)
+$define(Test::qm_gpio)</text>
     </file>
    </directory>
   </directory>

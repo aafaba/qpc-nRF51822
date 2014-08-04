@@ -361,7 +361,7 @@
               <MiscControls>--c99</MiscControls>
               <Define>NRF51 DEBUG_NRF_USER BLE_STACK_SUPPORT_REQD BOARD_NRF6310</Define>
               <Undefine></Undefine>
-              <IncludePath>..;../include;../include/driver;../include/port;../include/qm;F:/qp/qpc/include;F:\Keil_v5\ARM\Device\Nordic\nrf51822\Include;F:\Keil_v5\ARM\Device\Nordic\nrf51822\Include\app_common;F:\Keil_v5\ARM\Device\Nordic\nrf51822\Include\ble;F:\Keil_v5\ARM\Device\Nordic\nrf51822\Include\ble\ble_services;F:\Keil_v5\ARM\Device\Nordic\nrf51822\Include\s110;F:\Keil_v5\ARM\Device\Nordic\nrf51822\Include\sd_common</IncludePath>
+              <IncludePath>..;../include;../include/driver;../include/port;../include/qm;F:/qp/qpc/include;F:\Keil_v5\ARM\Device\Nordic\nrf51822\Include;F:\Keil_v5\ARM\Device\Nordic\nrf51822\Include\app_common;F:\Keil_v5\ARM\Device\Nordic\nrf51822\Include\ble;F:\Keil_v5\ARM\Device\Nordic\nrf51822\Include\ble\ble_services;F:\Keil_v5\ARM\Device\Nordic\nrf51822\Include\s110;F:\Keil_v5\ARM\Device\Nordic\nrf51822\Include\sd_common;../src</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -667,27 +667,27 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>stack</GroupName>
+          <GroupName>base</GroupName>
           <Files>
             <File>
               <FileName>advertising.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\src\stack\advertising.c</FilePath>
+              <FilePath>..\src\base\advertising.c</FilePath>
             </File>
             <File>
               <FileName>gap.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\src\stack\gap.c</FilePath>
+              <FilePath>..\src\base\gap.c</FilePath>
             </File>
             <File>
               <FileName>security.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\src\stack\security.c</FilePath>
+              <FilePath>..\src\base\security.c</FilePath>
             </File>
             <File>
               <FileName>stack.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\src\stack\stack.c</FilePath>
+              <FilePath>..\src\base\stack.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -724,6 +724,26 @@
               <FileType>1</FileType>
               <FilePath>..\src\qm\qm_stack.c</FilePath>
             </File>
+            <File>
+              <FileName>qm_gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\qm\qm_gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>qm_security.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\qm\qm_security.c</FilePath>
+            </File>
+            <File>
+              <FileName>qm_connection.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\qm\qm_connection.c</FilePath>
+            </File>
+            <File>
+              <FileName>qm_lbs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\qm\qm_lbs.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -733,6 +753,26 @@
               <FileName>qpc_handler.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\port\qpc_handler.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>test</GroupName>
+          <Files>
+            <File>
+              <FileName>test_gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\test\test_gpio.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>service</GroupName>
+          <Files>
+            <File>
+              <FileName>ble_lbs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\service\ble_lbs.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1399,27 +1439,27 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>stack</GroupName>
+          <GroupName>base</GroupName>
           <Files>
             <File>
               <FileName>advertising.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\src\stack\advertising.c</FilePath>
+              <FilePath>..\src\base\advertising.c</FilePath>
             </File>
             <File>
               <FileName>gap.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\src\stack\gap.c</FilePath>
+              <FilePath>..\src\base\gap.c</FilePath>
             </File>
             <File>
               <FileName>security.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\src\stack\security.c</FilePath>
+              <FilePath>..\src\base\security.c</FilePath>
             </File>
             <File>
               <FileName>stack.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\src\stack\stack.c</FilePath>
+              <FilePath>..\src\base\stack.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1456,6 +1496,26 @@
               <FileType>1</FileType>
               <FilePath>..\src\qm\qm_stack.c</FilePath>
             </File>
+            <File>
+              <FileName>qm_gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\qm\qm_gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>qm_security.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\qm\qm_security.c</FilePath>
+            </File>
+            <File>
+              <FileName>qm_connection.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\qm\qm_connection.c</FilePath>
+            </File>
+            <File>
+              <FileName>qm_lbs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\qm\qm_lbs.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1465,6 +1525,26 @@
               <FileName>qpc_handler.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\src\port\qpc_handler.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>test</GroupName>
+          <Files>
+            <File>
+              <FileName>test_gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\test\test_gpio.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>service</GroupName>
+          <Files>
+            <File>
+              <FileName>ble_lbs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\src\service\ble_lbs.c</FilePath>
             </File>
           </Files>
         </Group>
