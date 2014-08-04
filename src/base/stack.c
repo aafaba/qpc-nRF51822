@@ -1,4 +1,4 @@
-#include "stack/stack.h"
+#include "base/stack.h"
 
 static void softdevice_assertion_handler(uint32_t pc, uint16_t line_num, const uint8_t * file_name)
 {
@@ -58,6 +58,7 @@ uint32_t stack_pull_events(void)
         err_code = sd_ble_evt_get((uint8_t *)buf, &evt_len);
         
         if(err_code == NRF_SUCCESS){
+            
             stack_ble_evt *pe = NULL;
             pe = Q_NEW(stack_ble_evt, STACK_BLE_EVENT_SIG);
 

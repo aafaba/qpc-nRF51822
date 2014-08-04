@@ -1,4 +1,4 @@
-#include "stack/gap.h"
+#include "base/gap.h"
 
 
 #define DEVICE_NAME	"Nordic_Template"	/**< Name of device. Will be included in the advertising data. */

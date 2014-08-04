@@ -1,4 +1,4 @@
-#include "stack/advertising.h"
+#include "base/advertising.h"
 
 #define DEVICE_NAME	"Nordic_Template"	/**< Name of device. Will be included in the advertising data. */
 #define APP_ADV_INTERVAL                64                                          /**< The advertising interval (in units of 0.625 ms. This value corresponds to 40 ms). */

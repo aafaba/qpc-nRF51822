@@ -9,7 +9,7 @@ void nrf51822_int_disable(void)
 	uint32_t err_code = sd_nvic_critical_region_enter(&IS_NESTED_CRITICAL_REGION);
 	if (err_code == NRF_ERROR_SOFTDEVICE_NOT_ENABLED)                               
     {                                                                               
-        __disable_irq();                                                            
+        //__disable_irq();                                                            
     }                                                                               
     
     if(IS_NESTED_CRITICAL_REGION)

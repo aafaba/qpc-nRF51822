@@ -26,13 +26,12 @@ void RTC1_IRQHandler(void)
 
 void rtc1_init(void)
 {
-    NVIC_EnableIRQ(RTC1_IRQn);
+    sd_nvic_SetPriority(RTC1_IRQn, NRF_APP_PRIORITY_LOW);
+    sd_nvic_EnableIRQ(RTC1_IRQn);
     
     NRF_RTC1->PRESCALER = COUNTER_PRESCALER;
     NRF_RTC1->EVTENSET = RTC_EVTENSET_TICK_Msk;
     NRF_RTC1->INTENSET = RTC_INTENSET_TICK_Msk;
-    
-    NVIC_SetPriority(RTC1_IRQn, APP_IRQ_PRIORITY_LOW);
     
     NRF_RTC1->TASKS_START = 1;
 }
